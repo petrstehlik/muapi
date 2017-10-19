@@ -7,13 +7,7 @@ class ResponseHandler(Response):
         """
         Serialize content of the response
         """
-        for item in content:
-            if isinstance(item, set):
-                item = list(item)
-            for i in item:
-                if isinstance(item[i], set):
-                    item[i] = list(item[i])
-        super(Response, self).__init__(json.dumps(content), *args, **kwargs)
+        super(Response, self).__init__(content, *args, **kwargs)
 
     @classmethod
     def force_type(cls, rv, environ=None):

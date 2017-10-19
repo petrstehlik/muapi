@@ -24,11 +24,11 @@ def routes():
     for rule in app.url_map.iter_rules():
         routes.append({
             "name": rule.rule,
-            "method": rule.methods,
+            "method": list(rule.methods),
             "desc" : rule.endpoint
         })
 
-    return(routes)
+    return(json.dumps(routes))
 
 def import_modules():
     """
