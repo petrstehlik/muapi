@@ -4,7 +4,7 @@ from setuptools import setup
 setup(
   name = 'muapi',
   packages = ['muapi', 'muapi.modules'], # this must be the same as the name above
-  version = '0.1.2',
+  version = '0.1.3',
   description = 'Modular user-oriented REST API',
   author = u'Petr Stehlík',
   author_email = 'pe.stehlik@gmail.com',
