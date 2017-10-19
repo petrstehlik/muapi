@@ -114,7 +114,7 @@ def setup():
     """
     if config.setup == False:
         raise ApiException("API is already setup")
-    settings = request.get_json()
+    settings = request.get_json(force=True)
 
     db = dbConnector()
 
@@ -137,6 +137,7 @@ def setup():
         res = unprotected_add_user(user)
 
         config.setup = False
-        return(json.dumps({ "user_id" : res}))
+        del res['password']
+        return(json.dumps(res))
     except Exception as e:
         raise ApiException({"error" : str(e)})
