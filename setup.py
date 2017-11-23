@@ -12,6 +12,13 @@ setup(
   download_url = 'https://github.com/petrstehlik/muapi/archive/0.1.tar.gz',
   keywords = ['modular', 'user-oriented', 'rest', 'api', 'flask'], # arbitrary keywords
   # Flask must be specified with version otherwise there is setuptools bug regarding Flask vs flask
-  install_requires = ['Flask>=0.10.1', 'flask-socketio', 'bcrypt', 'enum34', 'configparser'],
+  install_requires = [
+      'Flask>=0.10.1',
+      'flask-socketio',
+      'bcrypt',
+      'enum34',
+      'configparser',
+      'python-pam'],
   classifiers = [],
+  include_package_data=True
 )
