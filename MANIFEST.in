@@ -1,2 +1,1 @@
-include muapi/config-sample.ini
-include muapi/config.ini
+include muapi/*.ini
