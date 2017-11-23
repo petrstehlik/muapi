@@ -97,8 +97,8 @@ class Config(object):
             args = vars(parser.parse_args())
 
         except Exception as e:
-            print(e)
-            print("Failed to parse arguments")
+            log.error(e)
+            log.error("Failed to parse arguments")
             exit(1)
         return args
 
