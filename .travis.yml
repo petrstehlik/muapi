@@ -17,13 +17,10 @@ before_install:
     - pip -V
 
 script:
-    - cd $TRAVIS_BUILD_DIR
     # Prepare virtualenv for python2 and python3
     - virtualenv venv
     - source venv/bin/activate
     - python setup.py install
-    - ls -lah
-    - pwd
     # Run API and kill it after 5 seconds
-    - python test/test.py --config test/c.ini
+    - python test/test.py --config test/c.ini &
     - t=$! && sleep 5 && kill $t
