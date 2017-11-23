@@ -83,16 +83,15 @@ class Config(object):
         """
         Handle arguments
         """
-        parser = argparse.ArgumentParser(description="Liberouter GUI REST API\n"\
-                "CESNET 2016 - 2017.\n\n"\
-                "Authors: Petr Stehlik, Jakub Neruda, Petr Velan, Radek Krejci\n"
-                "GitHub: https://github.com/CESNET/liberouter-gui"
+        parser = argparse.ArgumentParser(description="Modular User-oriented REST API\n"\
+                "(c) 2016 - 2017.\n\n"\
+                "Authors: Petr Stehlik\n"
+                "GitHub: https://github.com/petrstehlik/muapi"
                 , formatter_class=RawTextHelpFormatter)
 
         parser.add_argument('-c', '--config',
                 default=os.path.join(os.path.dirname(__file__), '../config.ini'),
                 dest='config', help='Load given configuration file')
-        #parser.add_argument('--help', '-h', help="Print this help", dest='help')
 
         try:
             args = vars(parser.parse_args())
