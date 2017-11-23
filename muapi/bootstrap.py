@@ -83,7 +83,7 @@ def check_users():
     """
     db = dbConnector()
     if db.count("users") == 0:
-        print("\033[1m" + "# Warning: * No users found *" + "\033[0m")
+        log.warn("\033[1m" + "* No users found *" + "\033[0m")
         app.add_url_rule('/setup', view_func = setup, methods=['POST'])
         config.setup = True
 
@@ -95,8 +95,7 @@ def handle_invalid_usage(error):
     """
     Handle ApiException as HTTP errors and react to its specification inside
     """
-    print("Caught error!")
-    print(error.to_dict())
+    log.warn("Caught ApiException. Reason: {}".format(str(error)))
     response = error.to_dict()
     return response, error.status_code
 
