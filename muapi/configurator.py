@@ -20,6 +20,8 @@ class Config(object):
     version = '1.0'
     modules = dict()
 
+    DEFAULT_CONFIG = os.path.join(os.path.dirname(__file__), "config-default.ini")
+
     def __init__(self):
         args = self.parse_arguments()
 
@@ -29,7 +31,7 @@ class Config(object):
         log.debug("Loading user configuration")
         self.config = configparser.ConfigParser()
 
-        res = self.config.read(args['config'])
+        res = self.config.read([self.DEFAULT_CONFIG, 'config.ini', args['config']])
 
         # Check if config was loaded successfully, api section must be there
         if len(res) == 0:
