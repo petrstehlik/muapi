@@ -1,6 +1,5 @@
 from flask import Response
 import json
-import pickle
 
 class ResponseHandler(Response):
     def __init__(self, content = None, *args, **kwargs):
