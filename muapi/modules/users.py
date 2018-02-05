@@ -1,6 +1,6 @@
-from flask import request
 import json
 import logging
+from flask import request
 
 from muapi import auth, db
 from muapi.dbConnector import dbConnector
@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 user_db = dbConnector()
 
-users = Module('users', __name__, url_prefix='/users', no_version=True)
+Users = Module('users', __name__, url_prefix='/users', no_version=True)
 
 def user_exists(user):
     if db.get("users", "username", user.username):
@@ -29,13 +29,13 @@ def get_users():
     # Remove password hash from the resulting query
     for user in res:
         del user["password"]
-    return(json.dumps(res))
+    return json.dumps(res)
 
 @auth.required()
 def get_user(user_id):
     user = db.get("users", "id", user_id)
     user.pop('password', None)
-    return(json.dumps(user))
+    return json.dumps(user)
 
 def unprotected_add_user(user):
     """
@@ -53,7 +53,7 @@ def unprotected_add_user(user):
         user.password = auth.create_hash(user.password)
 
     res = user_db.insert("users", user.to_dict())
-    return(res)
+    return res
 
 
 @auth.required(Role.admin)
@@ -68,7 +68,7 @@ def add_user():
     user.user_id = str(unprotected_add_user(user))
     user.password = None
 
-    return(json.dumps(user.to_dict()))
+    return json.dumps(user.to_dict())
 
 @auth.required(Role.admin)
 def remove_user(user_id):
@@ -80,7 +80,7 @@ def remove_user(user_id):
     res = None
     try:
         res = user_db.delete("users", "id", user_id)
-    except Exception as e:
+    except Exception:
         raise UserException("User not found", status_code = 404)
 
     if res == None:
@@ -90,7 +90,7 @@ def remove_user(user_id):
 
     user.password = None
 
-    return(json.dumps(user.to_dict()))
+    return json.dumps(user.to_dict())
 
 @auth.required()
 def edit_user(user_id):
@@ -106,8 +106,7 @@ def edit_user(user_id):
     if session["user"].role != Role.admin:
         # We must check if the user is editing themselves
         if user_id != session["user"].id:
-            raise UserException("Insufficient privileges. Non-admin users can edit only themselves",
-                    status_code=401)
+            raise UserException("Insufficient privileges", status_code=401)
 
     # Create basic query for user updating
     query = dict()
@@ -140,10 +139,10 @@ def edit_user(user_id):
     # Remove password hash from the response
     del res['password']
 
-    return(json.dumps(res))
+    return json.dumps(res)
 
-users.add_url_rule('', view_func=get_users, methods=['GET'])
-users.add_url_rule('', view_func=add_user, methods=['POST'])
-users.add_url_rule('/<string:user_id>', view_func=get_user, methods=['GET'])
-users.add_url_rule('/<string:user_id>', view_func=edit_user, methods=['PUT'])
-users.add_url_rule('/<string:user_id>', view_func=remove_user, methods=['DELETE'])
+Users.add_url_rule('', view_func=get_users, methods=['GET'])
+Users.add_url_rule('', view_func=add_user, methods=['POST'])
+Users.add_url_rule('/<string:user_id>', view_func=get_user, methods=['GET'])
+Users.add_url_rule('/<string:user_id>', view_func=edit_user, methods=['PUT'])
+Users.add_url_rule('/<string:user_id>', view_func=remove_user, methods=['DELETE'])

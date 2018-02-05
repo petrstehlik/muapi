@@ -1,14 +1,17 @@
-from flask import request
+"""
+Authorization module
+"""
 import json
+from flask import request
 
-from muapi import auth, db
+from muapi import auth
 from muapi.Module import Module
 from muapi.Auth import AuthException
 from muapi.user import User
 
-au = Module('authorization', __name__, url_prefix='/authorization', no_version=True)
+AU = Module('authorization', __name__, url_prefix='/authorization', no_version=True)
 
-@au.route('', methods=['POST'])
+@AU.route('', methods=['POST'])
 def login():
     """
     Authorize user using their username and password
@@ -27,20 +30,23 @@ def login():
 
     session_id = auth.store_session(user)
 
-    return(json.dumps({"session_id" : session_id, "user" : auth_user}))
+    return json.dumps({"session_id" : session_id, "user" : auth_user})
 
-@au.route('', methods=['DELETE'])
+@AU.route('', methods=['DELETE'])
 @auth.required()
 def logout():
+    """
+    Logout a user by deleting its session from session manager
+    """
     session_id = request.headers.get('Authorization', None)
     auth.delete(session_id)
-    return(json.dumps({"success" : True}))
+    return json.dumps({"success" : True})
 
 
-"""
-Checks validity of session using only required() decorator
-"""
-@au.route('', methods=['GET'])
+@AU.route('', methods=['GET'])
 @auth.required()
 def checkSession():
-    return('')
+    """
+    Checks validity of session using only required() decorator
+    """
+    return ''
