@@ -32,7 +32,7 @@ class Auth(object):
 
     @classmethod
     def check_password(self, password, hash):
-        return bcrypt.checkpw(password.encode('utf8'), hash)
+        return bcrypt.checkpw(password.encode('utf8'), hash.encode('utf8'))
 
     @classmethod
     def create_hash(self, password):
