@@ -15,6 +15,7 @@ user_db = dbConnector()
 
 Users = Module('users', __name__, url_prefix='/users', no_version=True)
 
+
 def user_exists(user):
     if db.get("users", "username", user.username):
         return True
@@ -22,7 +23,8 @@ def user_exists(user):
         return True
     return False
 
-#@auth.required()
+
+@auth.required()
 def get_users():
     res = list(db.getAll("users"))
 
@@ -31,11 +33,13 @@ def get_users():
         del user["password"]
     return json.dumps(res)
 
+
 @auth.required()
 def get_user(user_id):
     user = db.get("users", "id", user_id)
     user.pop('password', None)
     return json.dumps(user)
+
 
 def unprotected_add_user(user):
     """
@@ -71,6 +75,7 @@ def add_user():
 
     return json.dumps(user.to_dict())
 
+
 @auth.required(Role.admin)
 def remove_user(user_id):
     """
@@ -92,6 +97,7 @@ def remove_user(user_id):
     user.password = None
 
     return json.dumps(user.to_dict())
+
 
 @auth.required()
 def edit_user(user_id):
@@ -141,6 +147,7 @@ def edit_user(user_id):
     del res['password']
 
     return json.dumps(res)
+
 
 Users.add_url_rule('', view_func=get_users, methods=['GET'])
 Users.add_url_rule('', view_func=add_user, methods=['POST'])
