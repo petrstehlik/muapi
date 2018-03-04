@@ -52,6 +52,7 @@ def unprotected_add_user(user):
     if user.provider == "db":
         user.password = auth.create_hash(user.password)
 
+    log.debug(user.to_dict())
     res = user_db.insert("users", user.to_dict())
     return res
 
