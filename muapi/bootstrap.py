@@ -53,6 +53,24 @@ def import_modules():
                 if isinstance(obj, Module):
                     app.register_blueprint(obj)
 
+
+def _first_user(username, password):
+    try:
+        # Insert user to database via user module
+        from .modules.users import unprotected_add_user
+        from .user import User
+        from .role import Role
+
+        user = User(username, password = password, role = Role.admin)
+        res = unprotected_add_user(user)
+        del res['password']
+
+        return json.dumps({"user_id": res})
+    except Exception as e:
+        raise ApiException({"error" : str(e)})
+
+
+
 def ask_for_username():
     print("Admin username [admin]: ", end="")
     name = input()
@@ -90,6 +108,8 @@ def check_users():
     else:
         config.setup = False
 
+
+
 @app.errorhandler(ApiException)
 def handle_invalid_usage(error):
     """
@@ -106,14 +126,15 @@ def setup_mode(response):
         response.status_code = 442
     return response
 
+
 def setup():
     """
     Setup the API
     Currently we only need tp create the administrator account
     """
-    if config.setup == False:
+    if not config.setup:
         raise ApiException("API is already setup")
-    settings = request.get_json(force=True)
+    settings = request.get_json()
 
     db = dbConnector()
 
@@ -126,17 +147,6 @@ def setup():
     if settings['password'] != settings['password2']:
         raise ApiException("Mismatching password fields")
 
-    try:
-        # Insert user to database via user module
-        from muapi.modules.users import unprotected_add_user
-        from muapi.user import User
-        from muapi.role import Role
-
-        user = User(settings['username'], password=settings['password'], role = Role.admin)
-        res = unprotected_add_user(user)
-
-        config.setup = False
-        del res['password']
-        return(json.dumps(res))
-    except Exception as e:
-        raise ApiException({"error" : str(e)})
+    result = _first_user(settings['username'], settings['password'])
+    config.setup = False
+    return(result)
