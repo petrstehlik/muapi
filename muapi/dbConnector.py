@@ -287,7 +287,7 @@ class dbConnector(object):
                 values = tuple()
 
                 for key in keys:
-                    if not isinstance(data[key], bytes) and not isinstance(data[key], str):
+                    if isinstance(data[key], list) or isinstance(data[key], dict):
                         try:
                             data[key] = json.dumps(data[key])
                         except Exception as e:
@@ -317,7 +317,7 @@ class dbConnector(object):
 
                 for k in data:
                     safe_data = None
-                    if not isinstance(data[k], bytes) and not isinstance(data[k], str):
+                    if isinstance(data[k], list) or isinstance(data[k], dict):
                         try:
                             safe_data = json.dumps(data[k])
                         except Exception as e:
